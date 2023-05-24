@@ -2,33 +2,18 @@ import { Link } from "react-router-dom";
 
 const HeroCard = ({ hero }: any) => {
   return (
-    <div className="h-[415px] max-w-xs rounded-lg overflow-hidden shadow-lg bg-white">
-      <img
-        className="w-full"
-        src={`https://www.freecodecamp.org/news/content/images/size/w2000/2022/09/jonatan-pie-3l3RwQdHRHg-unsplash.jpg`}
-        alt="hero-image"
-      />
-      <div className="px-6 py-4">
-        <div className="text-xl mb-2">
-          <span className="font-bold">Nickname:</span>{" "}
-          <Link to={`/hero/${hero._id}`}>{hero.nickname}</Link>
-        </div>
-        <div className="text-sm mb-2">
-          <span className="font-semibold">Real name:</span> {hero.real_name}
-        </div>
-        <div className="text-sm mb-2">
-          <span className="font-semibold">Origin description:</span>{" "}
-          {hero.origin_description}
-        </div>
-        <div className="text-sm mb-2">
-          <span className="font-semibold">Superpowers:</span> {hero.superpowers}
-        </div>
-        <div className="text-sm">
-          <span className="font-semibold">Catch phrase:</span>{" "}
-          {hero.catch_phrase}
+    <Link to={`/hero/${hero._id}`}>
+      <div className="relative h-[450px] outline-none hover:transform hover:scale-105 transition-all duration-200">
+        <img
+          className="h-full object-cover"
+          src={hero.image[hero.image.length - 1]}
+          alt="hero-image"
+        />
+        <div className="absolute bottom-5 py-2 bg-gray-500 text-white bg-opacity-40 w-full text-xl mb-2 font-bold text-center">
+          {hero.nickname}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

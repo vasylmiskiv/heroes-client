@@ -7,27 +7,42 @@ import axios from "axios";
 
 const initialState: HeroesState = {
   heroes: [],
+  totalPages: 0,
+  currentPage: 0,
+  itemsPerPage: 5,
   selectedHero: null,
   status: "idle",
   error: null,
 };
 
-export const fetchHeroes = createAsyncThunk("heroes/fetchHeroes", async () => {
-  const response = await axios.get<Hero[]>(
-    `${import.meta.env.VITE_API_URL}/heroes`
-  );
+export const getHeroes = createAsyncThunk(
+  "heroes/getHeroes",
+  async (_, { getState }: { getState: any }) => {
+    const { currentPage, itemsPerPage } = getState().heroes;
 
-  return response.data;
-});
+    const response = await axios.get<getHeroesData>(
+      `${
+        import.meta.env.VITE_API_URL
+      }/heroes?page=${currentPage}&perPage=${itemsPerPage}`
+    );
+
+    const {
+      heroes,
+      totalPages,
+      currentPage: responseCurrentPage,
+    } = response.data;
+
+    return { heroes, totalPages, currentPage: responseCurrentPage };
+  }
+);
 
 export const createHero = createAsyncThunk(
   "heroes/createHero",
-  async (newHero: Hero) => {
+  async (newHero: FormData) => {
     const response = await axios.post<Hero>(
       `${import.meta.env.VITE_API_URL}/heroes`,
       newHero
     );
-
     return response.data;
   }
 );
@@ -47,20 +62,61 @@ export const getHeroById = createAsyncThunk(
   }
 );
 
+export const updateHero = createAsyncThunk(
+  "heroes/updateHero",
+  async ({ id, data }: { id: any; data: any }) => {
+    console.log(data);
+    try {
+      const response = await axios.put<File>(
+        `${import.meta.env.VITE_API_URL}/heroes/${id}`,
+        data
+      );
+
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to update hero data");
+    }
+  }
+);
+
+export const deleteHero = createAsyncThunk(
+  "heroes/deleteHero",
+  async (id: string) => {
+    try {
+      const response = await axios.delete<File>(
+        `${import.meta.env.VITE_API_URL}/heroes/${id}`
+      );
+
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to update hero data");
+    }
+  }
+);
+
 const heroesSlice = createSlice({
   name: "heroes",
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+    clearSelectedHero: (state) => {
+      state.selectedHero = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchHeroes.pending, (state) => {
+      .addCase(getHeroes.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchHeroes.fulfilled, (state, action) => {
+      .addCase(getHeroes.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.heroes = action.payload;
+        state.heroes = action.payload.heroes;
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.currentPage;
       })
-      .addCase(fetchHeroes.rejected, (state, action) => {
+      .addCase(getHeroes.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? null;
       })
@@ -85,6 +141,28 @@ const heroesSlice = createSlice({
       .addCase(getHeroById.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? null;
+      })
+      .addCase(updateHero.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateHero.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.selectedHero = action.payload;
+      })
+      .addCase(updateHero.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? null;
+      })
+      .addCase(deleteHero.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteHero.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.selectedHero = action.payload;
+      })
+      .addCase(deleteHero.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? null;
       });
   },
 });
@@ -94,5 +172,7 @@ const store = configureStore({
     heroes: heroesSlice.reducer,
   },
 });
+
+export const { setCurrentPage, clearSelectedHero } = heroesSlice.actions;
 
 export default store;

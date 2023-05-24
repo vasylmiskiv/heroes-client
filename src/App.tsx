@@ -1,24 +1,26 @@
-import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HeroesPage from "./pages/HeroesPage";
 import CreateHeroPage from "./pages/CreateHeroPage";
-import UpdateHeroPage from "./pages/UpdateHeroPage";
+import EditHeroPage from "./pages/EditHeroPage";
 import HeroPage from "./pages/HeroPage";
 import NotFound from "./pages/NotFound";
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HeroesPage />} />
-        <Route path="/hero/:id" element={<HeroPage />} />
-        <Route path="/create" element={<CreateHeroPage />} />
-        <Route path="/edit" element={<UpdateHeroPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+    <div id="app">
+      <Router>
+        <Navbar />
+
+        <Routes>
+          <Route path="/" element={<HeroesPage />} />
+          <Route path="/hero/:id" element={<HeroPage />} />
+          <Route path="/create" element={<CreateHeroPage />} />
+          <Route path="/edit/:id" element={<EditHeroPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 
