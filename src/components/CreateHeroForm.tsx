@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { createHero } from "../redux/store";
+import { createHero } from "../redux/heroesSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router";
 import { useFormik } from "formik";

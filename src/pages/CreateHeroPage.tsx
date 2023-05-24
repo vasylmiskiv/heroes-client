@@ -7,6 +7,7 @@ const CreateHeroPage = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
   return (
     <section className="container mx-auto py-10">
       <div className="px-4">

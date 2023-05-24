@@ -1,18 +1,17 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { deleteHero, getHeroById } from "../redux/store";
+import { Link, useParams } from "react-router-dom";
 import { Dispatch } from "@reduxjs/toolkit";
 import { RotatingTriangles } from "react-loader-spinner";
 
-import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
+import { getHeroById } from "../redux/heroesSlice";
+import { AiOutlineEdit } from "react-icons/ai";
 
 const HeroPage: React.FC = () => {
   const { id } = useParams();
   const { selectedHero, status } = useSelector((state: any) => state.heroes);
 
   const dispatch: Dispatch<any> = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -44,38 +43,40 @@ const HeroPage: React.FC = () => {
       ) : (
         <div className="mx-auto bg-white text-slate-900 bg-opacity-20 rounded-lg shadow-lg p-6">
           {selectedHero ? (
-            <div className="flex max-lg:flex-col md:space-x-10">
+            <div className="flex max-xl:flex-col md:space-x-10">
               <img
                 src={selectedHero.image[selectedHero.image.length - 1]}
                 alt="hero"
                 className="rounded-lg md:h-[450px]"
               />
               <div className="flex py-5 flex-col justify-between gap-5">
-                <div>
-                  <div className="text-3xl font-bold mb-4 break-words">
-                    <div className="flex items-center gap-5 ">
-                      <div>{selectedHero.nickname}</div>
-                      <Link to={`/edit/${id}`}>
-                        <div className="bg-gray-500 rounded-full p-2 hover:bg-gray-700 cursor-pointer transition-all duration-200">
-                          <AiOutlineEdit size={12} />
-                        </div>
-                      </Link>
-                    </div>
+                <div className="text-3xl font-bold">
+                  <div className="flex gap-5">
+                    <p className="text-xl md:text-2xl">
+                      {selectedHero.nickname}
+                    </p>
+                    <Link to={`/edit/${id}`}>
+                      <div className="bg-gray-500 rounded-full p-2 mt-1 hover:bg-gray-600 cursor-pointer transition-all duration-200">
+                        <AiOutlineEdit size={12} />
+                      </div>
+                    </Link>
                   </div>
+                </div>
+                <div className="overflow-y-auto h-[200px]">
                   <p className="mb-4 text-xl break-words">
-                    <span className="font-semibold">Real Name:</span>{" "}
+                    <span className="font-semibold">Real Name: </span>
                     {selectedHero.real_name}
                   </p>
                   <p className="mb-4 text-xl break-words">
-                    <span className="font-semibold">Origin Description:</span>{" "}
+                    <span className="font-semibold">Origin Description: </span>
                     {selectedHero.origin_description}
                   </p>
                   <p className="mb-4 text-xl break-words">
-                    <span className="font-semibold">Superpowers:</span>{" "}
+                    <span className="font-semibold">Superpowers: </span>
                     {selectedHero.superpowers}
                   </p>
                   <p className="mb-10 text-xl break-words">
-                    <span className="font-semibold">Catch Phrase:</span>{" "}
+                    <span className="font-semibold">Catch Phrase: </span>
                     {selectedHero.catch_phrase}
                   </p>
                 </div>

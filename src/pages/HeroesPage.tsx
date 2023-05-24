@@ -1,12 +1,18 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSelectedHero, getHeroes, setCurrentPage } from "../redux/store";
+import { Link } from "react-router-dom";
 import { Dispatch } from "@reduxjs/toolkit";
+import { RotatingTriangles } from "react-loader-spinner";
+import "react-responsive-pagination/themes/classic.css";
+
+import {
+  clearSelectedHero,
+  getHeroes,
+  setCurrentPage,
+} from "../redux/heroesSlice";
+
 import HeroCard from "../components/HeroCard";
 import ResponsivePagination from "react-responsive-pagination";
-import "react-responsive-pagination/themes/classic.css";
-import { Link } from "react-router-dom";
-import { RotatingTriangles } from "react-loader-spinner";
 
 const HeroesPage = () => {
   const dispatch: Dispatch<any> = useDispatch();
