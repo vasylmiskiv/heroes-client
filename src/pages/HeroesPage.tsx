@@ -32,7 +32,7 @@ const HeroesPage = () => {
     }
 
     dispatch(getHeroes());
-  }, [currentPage, totalPages, selectedHero]);
+  }, [currentPage, pageHeroes.length, selectedHero]);
 
   const onChangeCurrentPage = (newPage: number) => {
     dispatch(setCurrentPage(newPage));

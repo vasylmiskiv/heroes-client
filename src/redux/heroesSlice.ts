@@ -166,9 +166,9 @@ export const heroesSlice = createSlice({
       .addCase(updateHero.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateHero.fulfilled, (state, action) => {
+      .addCase(updateHero.fulfilled, (state) => {
         state.status = "succeeded";
-        state.selectedHero = action.payload;
+        // state.selectedHero = action.payload;
       })
       .addCase(updateHero.rejected, (state, action) => {
         state.status = "failed";
@@ -177,7 +177,7 @@ export const heroesSlice = createSlice({
       .addCase(deleteHero.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(deleteHero.fulfilled, (state, action) => {
+      .addCase(deleteHero.fulfilled, (state) => {
         state.status = "succeeded";
         // state.selectedHero = action.payload;
       })

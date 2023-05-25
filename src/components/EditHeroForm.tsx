@@ -88,7 +88,7 @@ const EditHeroForm = () => {
       <div className="flex max-md:flex-col-reverse mx-auto gap-10">
         <div className="max-md:w-full w-1/3 bg-slate-900 p-10 overflow-x-auto h-[600px] rounded-lg">
           {selectedHero?.image.map((imagePath: string, index: number) => (
-            <div className="flex items-center mb-10 gap-10">
+            <div className="flex items-center mb-10 gap-10" key={imagePath}>
               <div className="relative">
                 <img
                   src={imagePath}
