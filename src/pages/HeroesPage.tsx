@@ -27,7 +27,7 @@ const HeroesPage = () => {
   }, [selectedHero]);
 
   useEffect(() => {
-    if (currentPage > totalPages) {
+    if (!pageHeroes.length && currentPage !== 1) {
       dispatch(setCurrentPage(currentPage - 1));
     }
 

@@ -58,7 +58,7 @@ const HeroPage: React.FC = () => {
                       {selectedHero.nickname}
                     </p>
                     <Link to={`/edit/${id}`}>
-                      <div className="bg-gray-500 rounded-full p-2 mt-2 hover:bg-gray-600 cursor-pointer transition-all duration-200">
+                      <div className="bg-gray-500 rounded-full p-2 mt-3 hover:bg-gray-600 cursor-pointer transition-all duration-200">
                         <AiOutlineEdit size={12} />
                       </div>
                     </Link>

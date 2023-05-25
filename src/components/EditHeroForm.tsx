@@ -13,11 +13,11 @@ const validationSchema = Yup.object({
   nickname: Yup.string()
     .required("Nickname is required")
     .min(2, "Nickname should have at least 2 characters")
-    .matches(/^[A-Za-z\s]+$/, "Nickname should only contain letters"),
+    .matches(/^[A-Za-z\s]+$/i, "Nickname should only contain letters"),
   realName: Yup.string()
     .required("Real name is required")
     .min(2, "Real name should have at least 2 characters")
-    .matches(/^[A-Za-z\s]+$/, "Real name should only contain letters"),
+    .matches(/^[A-Za-z\s]+$/i, "Real name should only contain letters"),
   originDescription: Yup.string().required("Origin description is required"),
   superpowers: Yup.string().required("Superpowers is required"),
   catchPhrase: Yup.string().required("Catch Phrase is required"),
@@ -137,11 +137,12 @@ const EditHeroForm = () => {
               <label className="block mb-2">
                 Real Name:
                 <input
-                  className={`outline-none border-b-2 px-4 py-2 w-full bg-transparent hover:border-green-300 focus:border-green-300 ${
+                  className={`outline-none autocomplete-off border-b-2 px-4 py-2 w-full bg-transparent hover:border-green-300 focus:border-green-300 ${
                     formik.errors.realName ? "border-red-500" : ""
                   }`}
                   type="text"
                   name="realName"
+                  autoComplete="off"
                   value={formik.values.realName}
                   onChange={formik.handleChange}
                 />
@@ -163,6 +164,7 @@ const EditHeroForm = () => {
                 }`}
                 name="originDescription"
                 value={formik.values.originDescription}
+                autoComplete="off"
                 onChange={formik.handleChange}
               />
             </label>
@@ -182,6 +184,7 @@ const EditHeroForm = () => {
                 }`}
                 name="superpowers"
                 value={formik.values.superpowers}
+                autoComplete="off"
                 onChange={formik.handleChange}
               />
             </label>
@@ -200,6 +203,7 @@ const EditHeroForm = () => {
                 }`}
                 name="catchPhrase"
                 value={formik.values.catchPhrase}
+                autoComplete="off"
                 onChange={formik.handleChange}
               />
             </label>

@@ -10,11 +10,11 @@ const validationSchema = Yup.object({
   nickname: Yup.string()
     .required("Nickname is required")
     .min(2, "Nickname should have at least 2 characters")
-    .matches(/^[A-Za-z]+$/, "Nickname should only contain letters"),
+    .matches(/^[A-Za-z\s]+$/i, "Nickname should only contain letters"),
   realName: Yup.string()
     .required("Real name is required")
     .min(2, "Real name should have at least 2 characters")
-    .matches(/^[A-Za-z]+$/, "Real name should only contain letters"),
+    .matches(/^[A-Za-z\s]+$/i, "Real name should only contain letters"),
   originDescription: Yup.string().required("Origin description is required"),
   superpowers: Yup.string().required("Superpowers is required"),
   catchPhrase: Yup.string().required("Catch Phrase is required"),
@@ -76,6 +76,7 @@ const CreateHeroForm = () => {
                 type="text"
                 name="nickname"
                 value={formik.values.nickname}
+                autoComplete="off"
                 onChange={formik.handleChange}
               />
             </label>
@@ -95,6 +96,7 @@ const CreateHeroForm = () => {
                 type="text"
                 name="realName"
                 value={formik.values.realName}
+                autoComplete="off"
                 onChange={formik.handleChange}
               />
             </label>
@@ -115,6 +117,7 @@ const CreateHeroForm = () => {
               }`}
               name="originDescription"
               value={formik.values.originDescription}
+              autoComplete="off"
               onChange={formik.handleChange}
             />
           </label>
@@ -134,6 +137,7 @@ const CreateHeroForm = () => {
               }`}
               name="superpowers"
               value={formik.values.superpowers}
+              autoComplete="off"
               onChange={formik.handleChange}
             />
           </label>
@@ -152,6 +156,7 @@ const CreateHeroForm = () => {
               }`}
               name="catchPhrase"
               value={formik.values.catchPhrase}
+              autoComplete="off"
               onChange={formik.handleChange}
             />
           </label>
