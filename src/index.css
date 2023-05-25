@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #374151;
+  min-height: 100vh;
+}
+
+.logo-nav-gradient {
+  background-image: linear-gradient(to right, orange, blue);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -27,45 +42,4 @@
 
 ::-webkit-scrollbar-corner {
   background-color: #475569;
-}
-
-body {
-  background-color: #374151;
-  min-height: 100vh;
-  backdrop-filter: blur(10px);
-}
-
-.hero-item:last-of-type {
-  margin-right: auto;
-}
-
-.logo-nav-gradient {
-  background-image: linear-gradient(to right, orange, blue);
-  background-clip: text;
-  -webkit-background-clip: text; /* For Safari */
-  color: transparent;
-}
-
-.custom-file-input {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  border: 1px solid #c0c0c0;
-}
-
-.custom-file-input input[type="file"] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.custom-file-input label {
-  display: inline-block;
-  padding: 8px 20px;
-  background-color: #475569;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
 }

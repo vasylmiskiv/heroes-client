@@ -1,11 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
-import { deleteHero, updateHero } from "../redux/heroesSlice";
-import { Dispatch } from "@reduxjs/toolkit";
 import { useNavigate, useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch } from "@reduxjs/toolkit";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import { deleteHero, updateHero, updateHeroImages } from "../redux/heroesSlice";
+
 import { AiOutlineDelete } from "react-icons/ai";
+import { deleteHeroImage } from "../redux/heroesSlice";
 
 const validationSchema = Yup.object({
   nickname: Yup.string()
@@ -19,20 +21,27 @@ const validationSchema = Yup.object({
   originDescription: Yup.string().required("Origin description is required"),
   superpowers: Yup.string().required("Superpowers is required"),
   catchPhrase: Yup.string().required("Catch Phrase is required"),
-  image: Yup.mixed().required("Image is required"),
+  // image: Yup.mixed().required("Image is required"),
 });
 
 const EditHeroForm = () => {
-  const { selectedHero, status } = useSelector((state: any) => state.heroes);
+  const { selectedHero, status } = useSelector(
+    (state: RootState) => state.heroes
+  );
 
   const navigate = useNavigate();
   const dispatch: Dispatch<any> = useDispatch();
 
   const { id } = useParams();
 
+  const handleDeleteImage = (index: number) => {
+    dispatch(deleteHeroImage({ index }));
+    dispatch(updateHeroImages());
+  };
+
   const handleDeleteHero = () => {
     const shouldDelete = window.confirm(
-      `Do you want to delete ${selectedHero.nickname}?`
+      `Do you want to delete ${selectedHero?.nickname}?`
     );
 
     if (id && shouldDelete) {
@@ -46,12 +55,12 @@ const EditHeroForm = () => {
 
   const formik = useFormik({
     initialValues: {
-      nickname: selectedHero.nickname || "",
-      realName: selectedHero.real_name || "",
-      originDescription: selectedHero.origin_description || "",
-      superpowers: selectedHero.superpowers || "",
-      catchPhrase: selectedHero.catch_phrase || "",
-      image: selectedHero.image || "",
+      nickname: selectedHero?.nickname || "",
+      realName: selectedHero?.real_name || "",
+      originDescription: selectedHero?.origin_description || "",
+      superpowers: selectedHero?.superpowers || "",
+      catchPhrase: selectedHero?.catch_phrase || "",
+      image: "",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -64,7 +73,9 @@ const EditHeroForm = () => {
       formData.append("catch_phrase", values.catchPhrase);
       formData.append("image", values.image);
 
-      dispatch(updateHero({ id, data: formData }));
+      if (id) {
+        dispatch(updateHero({ id, data: formData }));
+      }
 
       if (status === "succeeded") {
         navigate("/");
@@ -74,24 +85,33 @@ const EditHeroForm = () => {
 
   return (
     <div className="rounded px-5 mx-auto">
-      <h1 className="mb-5 text-4xl font-bold text-white text-center">
-        Edit Hero
-      </h1>
-      <div className="mb-6 w-1/5 bg-green-500 h-1 mx-auto"></div>
-      <div className="flex mx-auto gap-20">
-        <div className="w-1/4 bg-slate-900 p-10 overflow-x-auto h-[600px] rounded-lg">
-          {selectedHero.image.map((imagePath: string) => (
+      <div className="flex max-md:flex-col-reverse mx-auto gap-10">
+        <div className="max-md:w-full w-1/3 bg-slate-900 p-10 overflow-x-auto h-[600px] rounded-lg">
+          {selectedHero?.image.map((imagePath: string, index: number) => (
             <div className="flex items-center mb-10 gap-10">
-              <img src={imagePath} className="w-[160px]" />
-              <div className="text-red-800 bg-red-400 py-2 px-4 rounded-lg cursor-pointer hover:bg-red-500">
-                <AiOutlineDelete size={18} />
+              <div className="relative">
+                <img
+                  src={imagePath}
+                  className="w-[450px] opacity-75  hover:opacity-100 transition-all duration-500"
+                />
+                <button
+                  className={`absolute bottom-5 right-5 py-2 px-4 rounded-lg ${
+                    selectedHero?.image.length === 1
+                      ? `bg-gray-500 cursor-not-allowed`
+                      : `text-red-800 bg-red-400 hover:bg-red-500 transition-all duration-200 cursor-pointer`
+                  } `}
+                  disabled={selectedHero?.image.length === 1}
+                  onClick={() => handleDeleteImage(index)}
+                >
+                  <AiOutlineDelete size={18} />
+                </button>
               </div>
             </div>
           ))}
         </div>
         <form
           onSubmit={formik.handleSubmit}
-          className="border xl:w-1/2 border-gray-700 bg-slate-900 text-white rounded-lg p-5 md:p-10"
+          className="border flex-1 border-gray-700 bg-slate-900 text-white rounded-lg p-5 md:p-10"
         >
           <div className="md:flex md:gap-5 max-sm:flex-col">
             <div className="w-1/2 mb-4 max-sm:w-full">
@@ -211,7 +231,9 @@ const EditHeroForm = () => {
               }}
             />
             {formik.touched.image && formik.errors.image && (
-              <div className="text-red-500 text-sm">123</div>
+              <div className="text-red-500 text-sm">
+                {String(formik.errors.image)}
+              </div>
             )}
           </div>
           <div className="flex gap-2">
@@ -219,7 +241,7 @@ const EditHeroForm = () => {
               type="submit"
               className="w-5/6 py-3 bg-green-400 hover:bg-green-500 rounded-lg text-white font-semibold"
             >
-              Create
+              Save changes
             </button>
             <button
               className="flex-1 py-3 flex justify-center items-center rounded-lg bg-red-500 hover:bg-red-600 transition-all duration-200"

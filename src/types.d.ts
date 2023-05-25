@@ -1,3 +1,7 @@
+type RootState = {
+  heroes: HeroesState;
+};
+
 interface Hero {
   _id?: string;
   nickname: string;
@@ -22,11 +26,15 @@ interface GetHeroesParams {
 }
 
 interface HeroesState {
-  heroes: Hero[];
+  pageHeroes: Hero[];
   totalPages: number;
   currentPage: number;
   itemsPerPage: number;
-  selectedHero: any;
+  selectedHero: Hero | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+}
+
+interface HeroCardProps {
+  hero: Hero;
 }

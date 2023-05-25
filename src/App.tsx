@@ -5,20 +5,23 @@ import CreateHeroPage from "./pages/CreateHeroPage";
 import EditHeroPage from "./pages/EditHeroPage";
 import HeroPage from "./pages/HeroPage";
 import NotFound from "./pages/NotFound";
+import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div id="app">
+    <div id="app" className="flex flex-col min-h-screen">
       <Router>
         <Navbar />
-
-        <Routes>
-          <Route path="/" element={<HeroesPage />} />
-          <Route path="/hero/:id" element={<HeroPage />} />
-          <Route path="/create" element={<CreateHeroPage />} />
-          <Route path="/edit/:id" element={<EditHeroPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <main className="flex-grow min-h-screen">
+          <Routes>
+            <Route path="/" element={<HeroesPage />} />
+            <Route path="/hero/:id" element={<HeroPage />} />
+            <Route path="/create" element={<CreateHeroPage />} />
+            <Route path="/edit/:id" element={<EditHeroPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
       </Router>
     </div>
   );

@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { createHero } from "../redux/heroesSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+
+import { createHero } from "../redux/heroesSlice";
 
 const validationSchema = Yup.object({
   nickname: Yup.string()
@@ -21,7 +22,7 @@ const validationSchema = Yup.object({
 });
 
 const CreateHeroForm = () => {
-  const { status } = useSelector((state: any) => state.heroes);
+  const { status } = useSelector((state: RootState) => state.heroes);
 
   const navigate = useNavigate();
   const dispatch: Dispatch<any> = useDispatch();

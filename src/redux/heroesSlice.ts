@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState: HeroesState = {
-  heroes: [],
+  pageHeroes: [],
   totalPages: 0,
   currentPage: 0,
   itemsPerPage: 5,
@@ -60,7 +60,7 @@ export const getHeroById = createAsyncThunk(
 
 export const updateHero = createAsyncThunk(
   "heroes/updateHero",
-  async ({ id, data }: { id: any; data: any }) => {
+  async ({ id, data }: { id: string; data: FormData }) => {
     try {
       const response = await axios.put<File>(
         `${import.meta.env.VITE_API_URL}/heroes/${id}`,
@@ -70,6 +70,24 @@ export const updateHero = createAsyncThunk(
       return response.data;
     } catch (error) {
       throw new Error("Failed to update hero data");
+    }
+  }
+);
+
+export const updateHeroImages = createAsyncThunk(
+  "heroes/updateHeroImages",
+  async (_, { getState }: { getState: any }) => {
+    const { selectedHero } = getState().heroes;
+
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/heroes/${selectedHero._id}/images`,
+        { image: selectedHero.image }
+      );
+
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to update hero's images");
     }
   }
 );
@@ -99,6 +117,14 @@ export const heroesSlice = createSlice({
     clearSelectedHero: (state) => {
       state.selectedHero = null;
     },
+    deleteHeroImage: (state, action) => {
+      const { index } = action.payload;
+      const { selectedHero } = state;
+
+      if (selectedHero && selectedHero.image) {
+        state.selectedHero?.image.splice(index, 1);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -107,7 +133,7 @@ export const heroesSlice = createSlice({
       })
       .addCase(getHeroes.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.heroes = action.payload.heroes;
+        state.pageHeroes = action.payload.heroes;
         state.totalPages = action.payload.totalPages;
         state.currentPage = action.payload.currentPage;
       })
@@ -120,7 +146,7 @@ export const heroesSlice = createSlice({
       })
       .addCase(createHero.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.heroes.push(action.payload);
+        state.pageHeroes.push(action.payload);
       })
       .addCase(createHero.rejected, (state, action) => {
         state.status = "failed";
@@ -153,13 +179,25 @@ export const heroesSlice = createSlice({
       })
       .addCase(deleteHero.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.selectedHero = action.payload;
+        // state.selectedHero = action.payload;
       })
       .addCase(deleteHero.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? null;
+      })
+      .addCase(updateHeroImages.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateHeroImages.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.selectedHero = action.payload;
+      })
+      .addCase(updateHeroImages.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? null;
       });
   },
 });
 
-export const { setCurrentPage, clearSelectedHero } = heroesSlice.actions;
+export const { setCurrentPage, clearSelectedHero, deleteHeroImage } =
+  heroesSlice.actions;

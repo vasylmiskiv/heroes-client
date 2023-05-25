@@ -17,19 +17,24 @@ import ResponsivePagination from "react-responsive-pagination";
 const HeroesPage = () => {
   const dispatch: Dispatch<any> = useDispatch();
 
-  const { heroes, currentPage, totalPages, status } = useSelector(
-    (state: any) => state.heroes
-  );
+  const { pageHeroes, currentPage, totalPages, status, selectedHero } =
+    useSelector((state: RootState) => state.heroes);
 
   useEffect(() => {
-    dispatch(clearSelectedHero());
-  }, []);
+    if (selectedHero) {
+      dispatch(clearSelectedHero());
+    }
+  }, [selectedHero]);
 
   useEffect(() => {
+    if (currentPage > totalPages) {
+      dispatch(setCurrentPage(currentPage - 1));
+    }
+
     dispatch(getHeroes());
-  }, [currentPage]);
+  }, [currentPage, totalPages, selectedHero]);
 
-  const onChangeCurrentPage = (newPage: any) => {
+  const onChangeCurrentPage = (newPage: number) => {
     dispatch(setCurrentPage(newPage));
   };
 
@@ -53,8 +58,8 @@ const HeroesPage = () => {
           </div>
         ) : (
           <div className="mb-20 flex flex-wrap justify-center gap-10">
-            {heroes.length ? (
-              heroes.map((hero: Hero) => (
+            {pageHeroes?.length ? (
+              pageHeroes.map((hero: Hero) => (
                 <div
                   key={hero._id}
                   className="sm:w-1/2 md:w-1/3 lg:w-1/5 xl:w-1/6 flex"

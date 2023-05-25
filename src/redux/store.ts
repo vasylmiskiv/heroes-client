@@ -16,7 +16,8 @@ const store = configureStore({
   },
 });
 
-export const { setCurrentPage, clearSelectedHero } = heroesSlice.actions;
+export const { setCurrentPage, clearSelectedHero, deleteHeroImage } =
+  heroesSlice.actions;
 
 export const persistor = persistStore(store);
 

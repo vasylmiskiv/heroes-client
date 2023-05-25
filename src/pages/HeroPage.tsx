@@ -9,7 +9,9 @@ import { AiOutlineEdit } from "react-icons/ai";
 
 const HeroPage: React.FC = () => {
   const { id } = useParams();
-  const { selectedHero, status } = useSelector((state: any) => state.heroes);
+  const { selectedHero, status } = useSelector(
+    (state: RootState) => state.heroes
+  );
 
   const dispatch: Dispatch<any> = useDispatch();
 
@@ -41,7 +43,7 @@ const HeroPage: React.FC = () => {
           />
         </div>
       ) : (
-        <div className="mx-auto bg-white text-slate-900 bg-opacity-20 rounded-lg shadow-lg p-6">
+        <div className="mx-auto bg-slate-900 text-white rounded-lg shadow-lg p-6">
           {selectedHero ? (
             <div className="flex max-xl:flex-col md:space-x-10">
               <img
@@ -49,34 +51,43 @@ const HeroPage: React.FC = () => {
                 alt="hero"
                 className="rounded-lg md:h-[450px]"
               />
-              <div className="flex py-5 flex-col justify-between gap-5">
+              <div className="flex-1 flex py-5 flex-col justify-between gap-5">
                 <div className="text-3xl font-bold">
-                  <div className="flex gap-5">
-                    <p className="text-xl md:text-2xl">
+                  <div className="mb-5 flex gap-5">
+                    <p className="text-2xl md:text-4xl">
                       {selectedHero.nickname}
                     </p>
                     <Link to={`/edit/${id}`}>
-                      <div className="bg-gray-500 rounded-full p-2 mt-1 hover:bg-gray-600 cursor-pointer transition-all duration-200">
+                      <div className="bg-gray-500 rounded-full p-2 mt-2 hover:bg-gray-600 cursor-pointer transition-all duration-200">
                         <AiOutlineEdit size={12} />
                       </div>
                     </Link>
                   </div>
+                  <div className="h-[2px] bg-gradient-to-r from-orange-500 to-blue-500"></div>
                 </div>
                 <div className="overflow-y-auto h-[200px]">
-                  <p className="mb-4 text-xl break-words">
-                    <span className="font-semibold">Real Name: </span>
+                  <p className="mb-4 text-xl break-words text-gray-400">
+                    <span className="font-semibold text-white">
+                      Real Name:{" "}
+                    </span>
                     {selectedHero.real_name}
                   </p>
-                  <p className="mb-4 text-xl break-words">
-                    <span className="font-semibold">Origin Description: </span>
+                  <p className="mb-4 text-xl break-words text-gray-400">
+                    <span className="font-semibold text-white">
+                      Origin Description:{" "}
+                    </span>
                     {selectedHero.origin_description}
                   </p>
-                  <p className="mb-4 text-xl break-words">
-                    <span className="font-semibold">Superpowers: </span>
+                  <p className="mb-4 text-xl break-words text-gray-400">
+                    <span className="font-semibold text-white">
+                      Superpowers:{" "}
+                    </span>
                     {selectedHero.superpowers}
                   </p>
-                  <p className="mb-10 text-xl break-words">
-                    <span className="font-semibold">Catch Phrase: </span>
+                  <p className="mb-10 text-xl break-words text-gray-400">
+                    <span className="font-semibold text-white">
+                      Catch Phrase:{" "}
+                    </span>
                     {selectedHero.catch_phrase}
                   </p>
                 </div>
@@ -88,7 +99,7 @@ const HeroPage: React.FC = () => {
                     <img
                       src={imagePath}
                       alt="hero-image"
-                      className="w-[160px] h-[120px] rounded-lg"
+                      className="w-[160px] h-[120px] rounded-lg opacity-75 hover:opacity-100 transition-all duration-500"
                       key={imagePath}
                     />
                   ))}
