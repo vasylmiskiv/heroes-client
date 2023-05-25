@@ -80,7 +80,7 @@ const EditHeroForm = () => {
       <div className="mb-6 w-1/5 bg-green-500 h-1 mx-auto"></div>
       <div className="flex mx-auto gap-20">
         <div className="w-1/4 bg-slate-900 p-10 overflow-x-auto h-[600px] rounded-lg">
-          {selectedHero.image.map((imagePath: string, index: number) => (
+          {selectedHero.image.map((imagePath: string) => (
             <div className="flex items-center mb-10 gap-10">
               <img src={imagePath} className="w-[160px]" />
               <div className="text-red-800 bg-red-400 py-2 px-4 rounded-lg cursor-pointer hover:bg-red-500">
