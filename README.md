@@ -4,11 +4,12 @@
 
 ## Installation
 ### Install the dependencies and devDependencies and start the server.
+#### Open your favorite Terminal and run these commands:
 - Open the folder:
 ```sh
 cd heroes-client
 ```
-- Open your favorite Terminal and run these commands:
+- Install dependecies:
 ```sh
 npm i
 ```
