@@ -42,7 +42,7 @@ const HeroesPage = () => {
     <section id="heroes-list">
       <div className="container mx-auto px-7 py-20">
         <h1 className="mb-5 text-4xl font-bold text-white text-center">
-          Heroes list
+          Heroes
         </h1>
         <div className="mb-10 w-1/5 bg-green-500 h-1 mx-auto"></div>
         {status === "loading" ? (

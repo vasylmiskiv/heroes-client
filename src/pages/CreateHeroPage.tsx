@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import CreateHeroForm from "../components/CreateHeroForm";
+import createHeroCover from "../assets/createhero-cover.jpg";
 
 const CreateHeroPage = () => {
   const navigate = useNavigate();
@@ -19,8 +20,21 @@ const CreateHeroPage = () => {
         </button>
       </div>
 
-      <div className="flex justify-center">
-        <CreateHeroForm />
+      <h1 className="mb-5 text-4xl font-bold text-white text-center">
+        Create a hero
+      </h1>
+      <div className="mb-6 w-1/5 bg-green-500 h-1 mx-auto"></div>
+      <div className="flex">
+        <div className="hidden xl:block xl:w-1/2">
+          <img
+            src={createHeroCover}
+            alt="createhero-cover"
+            className="h-full opacity-75 hover:opacity-100 rounded-lg transition-all duration-500"
+          />
+        </div>
+        <div className="w-full justify-center xl:w-1/2">
+          <CreateHeroForm />
+        </div>
       </div>
     </section>
   );

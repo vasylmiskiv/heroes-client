@@ -56,14 +56,10 @@ const CreateHeroForm = () => {
   });
 
   return (
-    <div className="xl:w-1/2 rounded px-5">
-      <h1 className="mb-5 text-4xl font-bold text-white text-center">
-        Create a hero
-      </h1>
-      <div className="mb-6 w-1/5 bg-green-500 h-1 mx-auto"></div>
+    <div className="rounded px-5">
       <form
         onSubmit={formik.handleSubmit}
-        className="border border-gray-700 bg-slate-900 text-white rounded-lg p-5 md:p-10"
+        className=" bg-slate-900 text-white rounded-lg p-5 md:p-10"
       >
         <div className="md:flex md:gap-5 max-sm:flex-col">
           <div className="w-1/2 mb-4 max-sm:w-full">

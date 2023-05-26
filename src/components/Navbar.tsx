@@ -1,12 +1,28 @@
 import { Link } from "react-router-dom";
 import { AiOutlinePlus } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentPage } from "../redux/heroesSlice";
 
 const Navbar = () => {
+  const { currentPage } = useSelector((state: RootState) => state.heroes);
+
+  const dispatch = useDispatch();
+
+  const handleResetPages = () => {
+    if (currentPage > 1) {
+      dispatch(setCurrentPage(1));
+    }
+  };
+
   return (
-    <nav className="sticky top-0 z-20 bg-gradient-to-r bg-slate-900">
-      <div className="container mx-auto px-8 py-4">
+    <header className="sticky top-0 z-20 bg-slate-900">
+      <nav className="container mx-auto px-7 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="logo-nav-gradient text-4xl font-bold">
+          <Link
+            to="/"
+            className="logo-nav-gradient text-4xl font-bold"
+            onClick={() => handleResetPages()}
+          >
             Heroes
           </Link>
           <Link
@@ -17,8 +33,8 @@ const Navbar = () => {
             Add a hero
           </Link>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 };
 

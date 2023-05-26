@@ -8,11 +8,11 @@ import { getHeroById } from "../redux/heroesSlice";
 import { AiOutlineEdit } from "react-icons/ai";
 
 const HeroPage: React.FC = () => {
-  const { id } = useParams();
   const { selectedHero, status } = useSelector(
     (state: RootState) => state.heroes
   );
 
+  const { id } = useParams();
   const dispatch: Dispatch<any> = useDispatch();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const HeroPage: React.FC = () => {
     }
   }, []);
 
-  const handleScroll = (event: any) => {
+  const handleScroll: React.WheelEventHandler<HTMLDivElement> = (event) => {
     const delta = Math.sign(event.deltaY);
     const container = event.currentTarget;
     container.scrollLeft += delta * 50;
