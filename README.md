@@ -6,7 +6,7 @@
 ### Install the dependencies and devDependencies and start the server.
 - Open the folder:
 ```sh
-cd heroes-api
+cd heroes-client
 ```
 - Open your favorite Terminal and run these commands:
 ```sh
