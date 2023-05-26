@@ -1,5 +1,7 @@
 # Heroes app client
 
+#### First you need to clone or download this repo https://github.com/vasylmiskiv/heroes-api and do all the steps according to the readme.md for the repository. Аfter that do these steps:
+
 - Download or clone the repository
 
 ## Installation
