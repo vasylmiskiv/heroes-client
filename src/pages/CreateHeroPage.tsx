@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import CreateHeroForm from "../components/CreateHeroForm";
 import createHeroCover from "../assets/createhero-cover.jpg";
+import Form from "../components/Form";
 
 const CreateHeroPage = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const CreateHeroPage = () => {
           />
         </div>
         <div className="w-full justify-center xl:w-1/2">
-          <CreateHeroForm />
+          <Form type="create" />
         </div>
       </div>
     </section>

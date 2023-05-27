@@ -4,7 +4,7 @@ import axios from "axios";
 const initialState: HeroesState = {
   pageHeroes: [],
   totalPages: 0,
-  currentPage: 0,
+  currentPage: 1,
   itemsPerPage: 5,
   selectedHero: null,
   status: "idle",

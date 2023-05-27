@@ -38,3 +38,7 @@ interface HeroesState {
 interface HeroCardProps {
   hero: Hero;
 }
+
+interface FormProps {
+  type: string;
+}

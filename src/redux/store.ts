@@ -1,3 +1,4 @@
+import thunk from "redux-thunk";
 import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -14,6 +15,7 @@ const store = configureStore({
   reducer: {
     heroes: persistedReducer,
   },
+  middleware: [thunk],
 });
 
 export const { setCurrentPage, clearSelectedHero, deleteHeroImage } =

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import EditHeroForm from "../components/EditHeroForm";
+import Form from "../components/Form";
 
 const EditHeroPage = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const EditHeroPage = () => {
         Edit Hero
       </h1>
       <div className="mb-6 w-1/5 bg-green-500 h-1 mx-auto"></div>
-      <EditHeroForm />
+      <Form type="edit" />
     </section>
   );
 };

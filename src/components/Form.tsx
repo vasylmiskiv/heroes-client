@@ -4,30 +4,62 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { deleteHero, updateHero, updateHeroImages } from "../redux/heroesSlice";
+import {
+  createHero,
+  deleteHero,
+  updateHero,
+  updateHeroImages,
+} from "../redux/heroesSlice";
 
 import { AiOutlineDelete } from "react-icons/ai";
 import { deleteHeroImage } from "../redux/heroesSlice";
 
-const validationSchema = Yup.object({
-  nickname: Yup.string()
-    .required("Nickname is required")
-    .min(2, "Nickname should have at least 2 characters")
-    .matches(/^[A-Za-z\s]+$/i, "Nickname should only contain letters"),
-  realName: Yup.string()
-    .required("Real name is required")
-    .min(2, "Real name should have at least 2 characters")
-    .matches(/^[A-Za-z\s]+$/i, "Real name should only contain letters"),
-  originDescription: Yup.string().required("Origin description is required"),
-  superpowers: Yup.string().required("Superpowers is required"),
-  catchPhrase: Yup.string().required("Catch Phrase is required"),
-  // image: Yup.mixed().required("Image is required"),
-});
-
-const EditHeroForm = () => {
+const Form = ({ type }: FormProps) => {
   const { selectedHero, status } = useSelector(
     (state: RootState) => state.heroes
   );
+
+  const getInitialValues = () => {
+    if (type === "edit" && selectedHero) {
+      return {
+        nickname: selectedHero.nickname || "",
+        realName: selectedHero.real_name || "",
+        originDescription: selectedHero.origin_description || "",
+        superpowers: selectedHero.superpowers || "",
+        catchPhrase: selectedHero.catch_phrase || "",
+        image: "",
+      };
+    }
+
+    return {
+      nickname: "",
+      realName: "",
+      originDescription: "",
+      superpowers: "",
+      catchPhrase: "",
+      image: "",
+    };
+  };
+
+  let validationSchema = Yup.object({
+    nickname: Yup.string()
+      .required("Nickname is required")
+      .min(2, "Nickname should have at least 2 characters")
+      .matches(/^[A-Za-z\s]+$/i, "Nickname should only contain letters"),
+    realName: Yup.string()
+      .required("Real name is required")
+      .min(2, "Real name should have at least 2 characters")
+      .matches(/^[A-Za-z\s]+$/i, "Real name should only contain letters"),
+    originDescription: Yup.string().required("Origin description is required"),
+    superpowers: Yup.string().required("Superpowers is required"),
+    catchPhrase: Yup.string().required("Catch Phrase is required"),
+  });
+
+  if (type === "create") {
+    validationSchema = validationSchema.shape({
+      image: Yup.mixed().required("Image is required"),
+    });
+  }
 
   const navigate = useNavigate();
   const dispatch: Dispatch<any> = useDispatch();
@@ -54,14 +86,7 @@ const EditHeroForm = () => {
   };
 
   const formik = useFormik({
-    initialValues: {
-      nickname: selectedHero?.nickname || "",
-      realName: selectedHero?.real_name || "",
-      originDescription: selectedHero?.origin_description || "",
-      superpowers: selectedHero?.superpowers || "",
-      catchPhrase: selectedHero?.catch_phrase || "",
-      image: "",
-    },
+    initialValues: getInitialValues(),
     validationSchema,
     onSubmit: (values) => {
       const formData = new FormData();
@@ -75,6 +100,8 @@ const EditHeroForm = () => {
 
       if (id) {
         dispatch(updateHero({ id, data: formData }));
+      } else {
+        dispatch(createHero(formData));
       }
 
       if (status === "succeeded") {
@@ -86,29 +113,31 @@ const EditHeroForm = () => {
   return (
     <div className="rounded px-5 mx-auto">
       <div className="flex max-md:flex-col-reverse mx-auto gap-10">
-        <div className="max-md:w-full w-1/3 bg-slate-900 p-10 overflow-x-auto h-[600px] rounded-lg">
-          {selectedHero?.image.map((imagePath: string, index: number) => (
-            <div className="flex items-center mb-10 gap-10" key={imagePath}>
-              <div className="relative">
-                <img
-                  src={imagePath}
-                  className="w-[450px] opacity-75  hover:opacity-100 transition-all duration-500"
-                />
-                <button
-                  className={`absolute bottom-5 right-5 py-2 px-4 rounded-lg ${
-                    selectedHero?.image.length === 1
-                      ? `bg-gray-500 cursor-not-allowed`
-                      : `text-red-800 bg-red-400 hover:bg-red-500 transition-all duration-200 cursor-pointer`
-                  } `}
-                  disabled={selectedHero?.image.length === 1}
-                  onClick={() => handleDeleteImage(index)}
-                >
-                  <AiOutlineDelete size={18} />
-                </button>
+        {type === "edit" && (
+          <div className="max-md:w-full w-1/3 bg-slate-900 p-10 overflow-x-auto h-[600px] rounded-lg">
+            {selectedHero?.image.map((imagePath: string, index: number) => (
+              <div className="flex items-center mb-10 gap-10" key={imagePath}>
+                <div className="relative">
+                  <img
+                    src={imagePath}
+                    className="w-[450px] opacity-75  hover:opacity-100 transition-all duration-500"
+                  />
+                  <button
+                    className={`absolute bottom-5 right-5 py-2 px-4 rounded-lg ${
+                      selectedHero?.image.length === 1
+                        ? `bg-gray-500 cursor-not-allowed`
+                        : `text-red-800 bg-red-400 hover:bg-red-500 transition-all duration-200 cursor-pointer`
+                    } `}
+                    disabled={selectedHero?.image.length === 1}
+                    onClick={() => handleDeleteImage(index)}
+                  >
+                    <AiOutlineDelete size={18} />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
         <form
           onSubmit={formik.handleSubmit}
           className="border flex-1 border-gray-700 bg-slate-900 text-white rounded-lg p-5 md:p-10"
@@ -260,4 +289,4 @@ const EditHeroForm = () => {
   );
 };
 
-export default EditHeroForm;
+export default Form;
