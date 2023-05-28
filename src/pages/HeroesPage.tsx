@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Dispatch } from "@reduxjs/toolkit";
-import { RotatingTriangles } from "react-loader-spinner";
 import "react-responsive-pagination/themes/classic.css";
 
 import {
@@ -13,6 +12,7 @@ import {
 
 import HeroCard from "../components/HeroCard";
 import ResponsivePagination from "react-responsive-pagination";
+import Loader from "../components/Loader";
 
 const HeroesPage = () => {
   const dispatch: Dispatch<any> = useDispatch();
@@ -47,14 +47,7 @@ const HeroesPage = () => {
         <div className="mb-10 w-1/5 bg-green-500 h-1 mx-auto"></div>
         {status === "loading" ? (
           <div className="py-40 flex justify-center">
-            <RotatingTriangles
-              visible={true}
-              height="100"
-              width="100"
-              ariaLabel="rotating-triangels-loading"
-              wrapperStyle={{}}
-              wrapperClass="rotating-triangels-wrapper"
-            />
+            <Loader />
           </div>
         ) : (
           <div className="mb-20 flex flex-wrap justify-center gap-10">

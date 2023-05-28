@@ -42,3 +42,8 @@ interface HeroCardProps {
 interface FormProps {
   type: string;
 }
+
+interface LoaderProps {
+  height?: number;
+  width?: number;
+}

@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { Dispatch } from "@reduxjs/toolkit";
-import { RotatingTriangles } from "react-loader-spinner";
 
 import { getHeroById } from "../redux/heroesSlice";
 import { AiOutlineEdit } from "react-icons/ai";
+import Loader from "../components/Loader";
 
 const HeroPage: React.FC = () => {
   const { selectedHero, status } = useSelector(
@@ -33,14 +33,7 @@ const HeroPage: React.FC = () => {
       <div className="mb-10 w-1/5 bg-green-500 h-1 mx-auto"></div>
       {status === "loading" ? (
         <div className="py-40 flex justify-center">
-          <RotatingTriangles
-            visible={true}
-            height="100"
-            width="100"
-            ariaLabel="rotating-triangels-loading"
-            wrapperStyle={{}}
-            wrapperClass="rotating-triangels-wrapper"
-          />
+          <Loader />
         </div>
       ) : (
         <div className="mx-auto bg-slate-900 text-white rounded-lg shadow-lg p-6">
@@ -58,7 +51,7 @@ const HeroPage: React.FC = () => {
                       {selectedHero.nickname}
                     </p>
                     <Link to={`/edit/${id}`}>
-                      <div className="bg-gray-500 rounded-full p-2 mt-3 hover:bg-gray-600 cursor-pointer transition-all duration-200">
+                      <div className="bg-gray-500 rounded-full p-2 mt-1 md:mt-3 hover:bg-gray-600 cursor-pointer transition-all duration-200">
                         <AiOutlineEdit size={12} />
                       </div>
                     </Link>

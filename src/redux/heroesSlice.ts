@@ -32,17 +32,6 @@ export const getHeroes = createAsyncThunk(
   }
 );
 
-export const createHero = createAsyncThunk(
-  "heroes/createHero",
-  async (newHero: FormData) => {
-    const response = await axios.post<Hero>(
-      `${import.meta.env.VITE_API_URL}/heroes`,
-      newHero
-    );
-    return response.data;
-  }
-);
-
 export const getHeroById = createAsyncThunk(
   "heroes/getHeroById",
   async (heroId: string) => {
@@ -58,19 +47,64 @@ export const getHeroById = createAsyncThunk(
   }
 );
 
+export const createHero = createAsyncThunk(
+  "heroes/createHero",
+  async ({
+    newHero,
+    imageData,
+  }: {
+    newHero: FormData;
+    imageData: FormData;
+  }) => {
+    const responseImgBb = await axios.post(
+      `${import.meta.env.VITE_IMGBB_API}/1/upload?key=${
+        import.meta.env.VITE_IMGBB_API_KEY
+      }`,
+      imageData
+    );
+
+    const imageUrl = responseImgBb.data.data.url;
+
+    newHero.append("image", imageUrl);
+
+    const response = await axios.post<Hero>(
+      `${import.meta.env.VITE_API_URL}/heroes`,
+      newHero
+    );
+
+    return response.data;
+  }
+);
+
 export const updateHero = createAsyncThunk(
   "heroes/updateHero",
-  async ({ id, data }: { id: string; data: FormData }) => {
-    try {
-      const response = await axios.put<File>(
-        `${import.meta.env.VITE_API_URL}/heroes/${id}`,
-        data
+  async ({
+    id,
+    updatedHero,
+    updatedImageData,
+  }: {
+    id: string;
+    updatedHero: FormData;
+    updatedImageData: FormData | null;
+  }) => {
+    if (updatedImageData) {
+      const responseImgBb = await axios.post(
+        `${import.meta.env.VITE_IMGBB_API}/1/upload?key=${
+          import.meta.env.VITE_IMGBB_API_KEY
+        }`,
+        updatedImageData
       );
 
-      return response.data;
-    } catch (error) {
-      throw new Error("Failed to update hero data");
+      const imageUrl = responseImgBb.data.data.url;
+      updatedHero.append("image", imageUrl);
     }
+
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/heroes/${id}`,
+      updatedHero
+    );
+
+    return response.data;
   }
 );
 
@@ -79,16 +113,12 @@ export const updateHeroImages = createAsyncThunk(
   async (_, { getState }: { getState: any }) => {
     const { selectedHero } = getState().heroes;
 
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/heroes/${selectedHero._id}/images`,
-        { image: selectedHero.image }
-      );
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/heroes/${selectedHero._id}/images`,
+      { image: selectedHero.image }
+    );
 
-      return response.data;
-    } catch (error) {
-      throw new Error("Failed to update hero's images");
-    }
+    return response.data;
   }
 );
 
@@ -166,9 +196,9 @@ export const heroesSlice = createSlice({
       .addCase(updateHero.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateHero.fulfilled, (state) => {
+      .addCase(updateHero.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // state.selectedHero = action.payload;
+        state.selectedHero = action.payload;
       })
       .addCase(updateHero.rejected, (state, action) => {
         state.status = "failed";
@@ -179,7 +209,6 @@ export const heroesSlice = createSlice({
       })
       .addCase(deleteHero.fulfilled, (state) => {
         state.status = "succeeded";
-        // state.selectedHero = action.payload;
       })
       .addCase(deleteHero.rejected, (state, action) => {
         state.status = "failed";
@@ -189,7 +218,7 @@ export const heroesSlice = createSlice({
         state.status = "loading";
       })
       .addCase(updateHeroImages.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        // state.status = "succeeded";
         state.selectedHero = action.payload;
       })
       .addCase(updateHeroImages.rejected, (state, action) => {

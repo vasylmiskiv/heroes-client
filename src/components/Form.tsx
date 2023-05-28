@@ -13,6 +13,8 @@ import {
 
 import { AiOutlineDelete } from "react-icons/ai";
 import { deleteHeroImage } from "../redux/heroesSlice";
+import Loader from "./Loader";
+import { useEffect } from "react";
 
 const Form = ({ type }: FormProps) => {
   const { selectedHero, status } = useSelector(
@@ -90,18 +92,28 @@ const Form = ({ type }: FormProps) => {
     validationSchema,
     onSubmit: (values) => {
       const formData = new FormData();
+      const imageData = new FormData();
 
       formData.append("nickname", values.nickname);
       formData.append("real_name", values.realName);
       formData.append("origin_description", values.originDescription);
       formData.append("superpowers", values.superpowers);
       formData.append("catch_phrase", values.catchPhrase);
-      formData.append("image", values.image);
+
+      if (values.image) {
+        imageData.append("image", values.image);
+      }
 
       if (id) {
-        dispatch(updateHero({ id, data: formData }));
+        dispatch(
+          updateHero({
+            id,
+            updatedHero: formData,
+            updatedImageData: values.image ? imageData : null,
+          })
+        );
       } else {
-        dispatch(createHero(formData));
+        dispatch(createHero({ newHero: formData, imageData }));
       }
 
       if (status === "succeeded") {
@@ -114,7 +126,12 @@ const Form = ({ type }: FormProps) => {
     <div className="rounded px-5 mx-auto">
       <div className="flex max-md:flex-col-reverse mx-auto gap-10">
         {type === "edit" && (
-          <div className="max-md:w-full w-1/3 bg-slate-900 p-10 overflow-x-auto h-[600px] rounded-lg">
+          <div className="relative max-md:w-full w-1/3 bg-slate-900 p-10 overflow-x-auto h-[600px] rounded-lg">
+            {/* {status === "loading" && (
+              <div className="absolute inset-0 z-50 flex items-center justify-center">
+                <Loader height={50} width={50} />
+              </div>
+            )} */}
             {selectedHero?.image.map((imagePath: string, index: number) => (
               <div className="flex items-center mb-10 gap-10" key={imagePath}>
                 <div className="relative">
@@ -257,7 +274,8 @@ const Form = ({ type }: FormProps) => {
                   event.currentTarget.files &&
                   event.currentTarget.files.length > 0
                 ) {
-                  formik.setFieldValue("image", event.currentTarget.files[0]);
+                  const file = event.currentTarget.files[0];
+                  formik.setFieldValue("image", file);
                 } else {
                   formik.setFieldValue("image", null);
                 }
@@ -272,16 +290,20 @@ const Form = ({ type }: FormProps) => {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="w-5/6 py-3 bg-green-400 hover:bg-green-500 rounded-lg text-white font-semibold"
+              className="flex-1 py-3 bg-green-400 hover:bg-green-500 rounded-lg text-white font-semibold"
             >
-              Save changes
+              {type === "edit" && `Save changes`}
+              {type === "create" && "Create a hero"}
             </button>
-            <button
-              className="flex-1 py-3 flex justify-center items-center rounded-lg bg-red-500 hover:bg-red-600 transition-all duration-200"
-              onClick={() => handleDeleteHero()}
-            >
-              <AiOutlineDelete size={18} />
-            </button>
+            {type === "edit" && (
+              <button
+                type="submit"
+                className="w-1/6 py-3 flex justify-center items-center rounded-lg bg-red-500 hover:bg-red-600 transition-all duration-200"
+                onClick={() => handleDeleteHero()}
+              >
+                <AiOutlineDelete size={18} />
+              </button>
+            )}
           </div>
         </form>
       </div>
