@@ -42,7 +42,7 @@ const HeroPage: React.FC = () => {
               <img
                 src={selectedHero.image[selectedHero.image.length - 1]}
                 alt="hero"
-                className="rounded-lg md:h-[450px]"
+                className="xl:w-1/2 rounded-lg md:h-[450px]"
               />
               <div className="flex-1 flex py-5 flex-col justify-between gap-5">
                 <div className="text-3xl font-bold">
