@@ -13,8 +13,6 @@ import {
 
 import { AiOutlineDelete } from "react-icons/ai";
 import { deleteHeroImage } from "../redux/heroesSlice";
-import Loader from "./Loader";
-import { useEffect } from "react";
 
 const Form = ({ type }: FormProps) => {
   const { selectedHero, status } = useSelector(
