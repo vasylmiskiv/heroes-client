@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import {
   createHero,
   deleteHero,
+  getHeroes,
   updateHero,
   updateHeroImages,
 } from "../redux/heroesSlice";
@@ -15,9 +16,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { deleteHeroImage } from "../redux/heroesSlice";
 
 const Form = ({ type }: FormProps) => {
-  const { selectedHero, status } = useSelector(
-    (state: RootState) => state.heroes
-  );
+  const { selectedHero } = useSelector((state: RootState) => state.heroes);
 
   const getInitialValues = () => {
     if (type === "edit" && selectedHero) {
@@ -66,29 +65,31 @@ const Form = ({ type }: FormProps) => {
 
   const { id } = useParams();
 
+  const navigateToHeroes = async () => {
+    await dispatch(getHeroes());
+    navigate("/");
+  };
+
   const handleDeleteImage = (index: number) => {
     dispatch(deleteHeroImage({ index }));
     dispatch(updateHeroImages());
   };
 
-  const handleDeleteHero = () => {
+  const handleDeleteHero = async () => {
     const shouldDelete = window.confirm(
       `Do you want to delete ${selectedHero?.nickname}?`
     );
 
     if (id && shouldDelete) {
       dispatch(deleteHero(id));
-
-      if (status === "succeeded") {
-        navigate("/");
-      }
+      await navigateToHeroes();
     }
   };
 
   const formik = useFormik({
     initialValues: getInitialValues(),
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const formData = new FormData();
       const imageData = new FormData();
 
@@ -114,9 +115,7 @@ const Form = ({ type }: FormProps) => {
         dispatch(createHero({ newHero: formData, imageData }));
       }
 
-      if (status === "succeeded") {
-        navigate("/");
-      }
+      await navigateToHeroes();
     },
   });
 

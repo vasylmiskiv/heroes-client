@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import HeroService from "../services/heroService";
+
+const heroService = new HeroService();
 
 const initialState: HeroesState = {
   pageHeroes: [],
@@ -16,17 +18,11 @@ export const getHeroes = createAsyncThunk(
   async (_, { getState }: { getState: any }) => {
     const { currentPage, itemsPerPage } = getState().heroes;
 
-    const response = await axios.get<getHeroesData>(
-      `${
-        import.meta.env.VITE_API_URL
-      }/heroes?page=${currentPage}&perPage=${itemsPerPage}`
-    );
-
     const {
       heroes,
       totalPages,
       currentPage: responseCurrentPage,
-    } = response.data;
+    } = await heroService.getHeroes(currentPage, itemsPerPage);
 
     return { heroes, totalPages, currentPage: responseCurrentPage };
   }
@@ -35,15 +31,9 @@ export const getHeroes = createAsyncThunk(
 export const getHeroById = createAsyncThunk(
   "heroes/getHeroById",
   async (heroId: string) => {
-    try {
-      const response = await axios.get<Hero>(
-        `${import.meta.env.VITE_API_URL}/heroes/${heroId}`
-      );
+    const hero = await heroService.getHeroById(heroId);
 
-      return response.data;
-    } catch (error) {
-      throw new Error("Failed to fetch hero data");
-    }
+    return hero;
   }
 );
 
@@ -56,23 +46,9 @@ export const createHero = createAsyncThunk(
     newHero: FormData;
     imageData: FormData;
   }) => {
-    const responseImgBb = await axios.post(
-      `${import.meta.env.VITE_IMGBB_API}/1/upload?key=${
-        import.meta.env.VITE_IMGBB_API_KEY
-      }`,
-      imageData
-    );
+    const createdHero = await heroService.createHero(newHero, imageData);
 
-    const imageUrl = responseImgBb.data.data.url;
-
-    newHero.append("image", imageUrl);
-
-    const response = await axios.post<Hero>(
-      `${import.meta.env.VITE_API_URL}/heroes`,
-      newHero
-    );
-
-    return response.data;
+    return createdHero;
   }
 );
 
@@ -87,24 +63,13 @@ export const updateHero = createAsyncThunk(
     updatedHero: FormData;
     updatedImageData: FormData | null;
   }) => {
-    if (updatedImageData) {
-      const responseImgBb = await axios.post(
-        `${import.meta.env.VITE_IMGBB_API}/1/upload?key=${
-          import.meta.env.VITE_IMGBB_API_KEY
-        }`,
-        updatedImageData
-      );
-
-      const imageUrl = responseImgBb.data.data.url;
-      updatedHero.append("image", imageUrl);
-    }
-
-    const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/heroes/${id}`,
-      updatedHero
+    const hero = await heroService.updateHero(
+      id,
+      updatedHero,
+      updatedImageData
     );
 
-    return response.data;
+    return hero;
   }
 );
 
@@ -113,27 +78,18 @@ export const updateHeroImages = createAsyncThunk(
   async (_, { getState }: { getState: any }) => {
     const { selectedHero } = getState().heroes;
 
-    const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/heroes/${selectedHero._id}/images`,
-      { image: selectedHero.image }
-    );
+    const { _id: id, image } = selectedHero;
 
-    return response.data;
+    const updatedImages = await heroService.updateHeroImages(id, image);
+
+    return updatedImages;
   }
 );
 
 export const deleteHero = createAsyncThunk(
   "heroes/deleteHero",
-  async (id: string) => {
-    try {
-      const response = await axios.delete<File>(
-        `${import.meta.env.VITE_API_URL}/heroes/${id}`
-      );
-
-      return response.data;
-    } catch (error) {
-      throw new Error("Failed to update hero data");
-    }
+  async (heroId: string) => {
+    await heroService.deleteHero(heroId);
   }
 );
 
@@ -218,7 +174,7 @@ export const heroesSlice = createSlice({
         state.status = "loading";
       })
       .addCase(updateHeroImages.fulfilled, (state, action) => {
-        // state.status = "succeeded";
+        state.status = "succeeded";
         state.selectedHero = action.payload;
       })
       .addCase(updateHeroImages.rejected, (state, action) => {
