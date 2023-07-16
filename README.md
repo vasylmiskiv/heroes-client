@@ -5,7 +5,7 @@
 - Download or clone the repository
 
 ## Installation
-### Install the dependencies and devDependencies and start the server.
+### Install the dependencies and start the server.
 #### Open your favorite Terminal and run these commands:
 - Open the folder:
 ```sh
